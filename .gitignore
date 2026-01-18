@@ -1,0 +1,17 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# some files
+streaming_encode_mp3.py
+
+# artifacts
+/audio_files
+/mp3_files
