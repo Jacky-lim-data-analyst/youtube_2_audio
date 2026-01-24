@@ -11,8 +11,8 @@ wheels/
 
 # some files
 streaming_encode_mp3.py
+play.py
+play2.py
 
 # artifacts
-/audio_files
-/mp3_files
-/video_files
+/data
