@@ -9,7 +9,7 @@ import sys
 import requests
 from pathlib import Path
 from pytubefix import YouTube
-from pytubefix.cli import on_progress
+# from pytubefix.cli import on_progress
 from mutagen.mp4 import MP4, MP4Cover
 from mutagen.mp3 import MP3
 from mutagen.id3 import ID3, TIT2, TPE1, TCON, TYER, APIC, USLT, TALB
@@ -23,7 +23,7 @@ def download_audio(url: str, output_dir: str | Path, filename: str | None = None
     
     output_path.mkdir(parents=True, exist_ok=True)
 
-    yt = YouTube(url, on_progress_callback=on_progress)
+    yt = YouTube(url)
     print(f"Title: {yt.title}")
 
     stream = yt.streams.get_audio_only()
@@ -143,7 +143,7 @@ def convert_m4ato_mp3(src, dst = None, quality: str = "0", remove_source=False):
 
 def edit_metadata(filepath, 
                   title=None, 
-                  artist=None, 
+                  artists=None, 
                   album=None, 
                   year=None,
                   genre=None, 
@@ -156,6 +156,14 @@ def edit_metadata(filepath,
         print(f"❌ File not found: {filepath}")
 
     print(f"\n✏️  Editing metadata for: {file_path.name}")
+
+    # handle multiple artists
+    if artists:
+        if isinstance(artists, str):
+            # split by comma and strip whitespace
+            artists = [a.strip() for a in artists.split()]
+        elif not isinstance(artists, list):
+            artists = [str(artists)]
 
     # read album art if provided
     album_art_data = None
@@ -194,8 +202,8 @@ def edit_metadata(filepath,
 
             if title:
                 audio.tags.add(TIT2(encoding=3, text=title))
-            if artist:
-                audio.tags.add(TPE1(encoding=3, text=artist))
+            if artists:
+                audio.tags.add(TPE1(encoding=3, text=artists))
             if album:
                 audio.tags.add(TALB(encoding=3, text=album))
             if year:
@@ -224,7 +232,7 @@ def edit_metadata(filepath,
             if title:
                 audio.tags['\xa9nam'] = title
             if artist:
-                audio.tags['\xa9ART'] = artist
+                audio.tags['\xa9ART'] = artists
             if album:
                 audio.tags['\xa9alb'] = album
             if year:
@@ -248,12 +256,12 @@ def edit_metadata(filepath,
         print("Metadata updated successfully")
 
         # Display updated metadata
-        if any([title, artist, album, year, genre, lyrics, album_art_data]):
+        if any([title, artists, album, year, genre, lyrics, album_art_data]):
             print("\n📋 Updated metadata:")
             if title:
                 print(f"   Title: {title}")
-            if artist:
-                print(f"   Artist: {artist}")
+            if artists:
+                print(f"   Artist: {artists}")
             if album:
                 print(f"   Album: {album}")
             if year:
@@ -363,7 +371,7 @@ Examples:
         edit_metadata(
             final_file,
             title=title,
-            artist=args.artist,
+            artists=args.artist,
             album=args.album,
             year=args.year,
             genre=args.genre,
@@ -374,4 +382,11 @@ Examples:
     print(f"\n🎉 All done! Final file: {final_file}")
 
 if __name__ == '__main__':
-    main()
+    try:
+        sys.exit(main())
+    except KeyboardInterrupt:
+        print("\n\n Interrupted by user")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        sys.exit(1)

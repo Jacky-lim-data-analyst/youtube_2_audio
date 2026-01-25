@@ -50,7 +50,7 @@ python convert_m4a_2_mp3.py
 
 ### CLI
 ```bash
-python3 music_downloader.py URL --convert -f "<filename>" -t "<title>" -a "<artist>" -y <year> -g "<genre>" --album-art "<album-art-path>"  # do not need to give file extension for filename
+python3 music_downloader.py URL --convert --filename "<filename>" --title "<title>" --artist "<artist>" --year <year> --genre "<genre>" --album-art "<album-art-path>"  # do not need to give file extension for filename
 
 python3 music_downloader.py URL -t "<title>" -a "<artist>" -y <year> -g "<genre>" --album-art "<path-to-album-art>"
 ```
