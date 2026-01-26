@@ -61,3 +61,9 @@ python3 music_downloader.py URL -t "<title>" -a "<artist>" -y <year> -g "<genre>
 - `convert_m4a_2_mp3.py`: Converts M4A to MP3 using `ffmpeg`.
 - `audio_files/`: Directory for downloaded raw audio (M4A).
 - `mp3_files/`: Directory for converted MP3 files.
+
+## How to use yt-dlp?
+```bash
+# at best 480p: best mp4 video if no mp4 video available
+yt-dlp -S "res:480" -f "bv*[ext=mp4]/b[ext=mp4] / bv*+ba/b" -P "<download-dir>" -o "<title>" -k <url>
+```
